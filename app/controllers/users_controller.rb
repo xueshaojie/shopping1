@@ -12,7 +12,8 @@ class UsersController < ApplicationController
       flash[:notice] = "注册成功，请登录"
       redirect_to new_session_path
     else
-      render 'new'
+      render action: :new
     end
   end
+
 end

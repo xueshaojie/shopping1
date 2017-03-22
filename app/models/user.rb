@@ -4,8 +4,8 @@ class User < ApplicationRecord
   attr_accessor :password, :password_confirmation
 
   validates_presence_of :email, message: "邮箱不能为空"
-  validates_format_of :email, message: "邮箱格式不合法"
-    with: \/w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/,
+  validates_format_of :email, message: "邮箱格式不合法",
+    with: /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/,
     if: proc { |user| !user.email.blank? }
   validates :email, uniqueness: true
 
@@ -19,7 +19,7 @@ class User < ApplicationRecord
     if: :need_validate_password
 
   def username
-    self.email.split('@').first 
+    self.email.split('@').first
   end
 
   private
