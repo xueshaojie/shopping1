@@ -1,3 +1,11 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get 'sessions/new'
+
+  get 'users/new'
+
+  root 'welcome#index'
+
+  resources :users
+  resources :sessions
+  delete '/logout' => 'session#destroy', as: :logout 
 end
