@@ -18,9 +18,13 @@ class Product < ApplicationRecord
 
   belongs_to :category
   has_many :product_images, -> { order(weight: 'desc') },
-    dependent: :destroy 
+    dependent: :destroy
+  has_one :main_product_image, -> { order(weight: 'desc') },
+    class_name: :ProductImage
 
   before_create :set_default_attrs
+
+  scope :onshelf, -> { where(status: Status::On) }
 
   module Status
     On = 'on'
@@ -28,7 +32,6 @@ class Product < ApplicationRecord
   end
 
   private
-
   def set_default_attrs
     self.uuid = RandomCode.generate_product_uuid
   end

@@ -9,9 +9,18 @@ class Category < ApplicationRecord
 
   before_validation :correct_ancestry
 
-  private
+  def self.grouped_data
+    self.roots.order("weight desc").inject([]) do |result, parent|
+      row = []
+      row << parent
+      row << parent.children.order("weight desc")
+      result << row
+    end
+  end
 
+  private
   def correct_ancestry
     self.ancestry = nil if self.ancestry.blank?
   end
+
 end
