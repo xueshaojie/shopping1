@@ -8,7 +8,7 @@ class CreateProducts < ActiveRecord::Migration[5.0]
       t.string :uuid
       t.decimal :msrp, precision: 10, scale: 2
       t.decimal :price, precision: 10, scale: 2
-      t.text :desciption
+      t.text :description
       t.timestamps
     end
 
