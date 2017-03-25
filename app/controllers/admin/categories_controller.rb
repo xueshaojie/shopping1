@@ -7,7 +7,7 @@ class Admin::CategoriesController < Admin::BaseController
     if params[:id].blank?
       @categories = Category.roots
     else
-      @categories = Category.find(params[:id])
+      @category = Category.find(params[:id])
       @categories = @category.children
     end
 
@@ -57,11 +57,12 @@ class Admin::CategoriesController < Admin::BaseController
 
   private
 
-    def find_root_categories
-      @root_categories = Category.roots.order(id: "desc")
-    end
+  def find_root_categories
+    @root_categories = Category.roots.order(id: "desc")
+  end
 
-    def find_category
-      @category = Category.find(params[:id])
-    end
+  def find_category
+    @category = Category.find(params[:id])
+  end
+
 end
