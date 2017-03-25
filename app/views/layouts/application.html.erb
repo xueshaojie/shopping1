@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <%= csrf_meta_tags %>
 
-    <%= stylesheet_link_tag    'application', media: 'all' %>
-    <%= javascript_include_tag 'application' %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= yield :stylesheets %>
   </head>
 
   <body>
@@ -20,6 +20,6 @@
     </div>
 
     <%= javascript_include_tag 'application' %>
-    <% yield :javascripts %>
+    <%= yield :javascripts %>
   </body>
 </html>
