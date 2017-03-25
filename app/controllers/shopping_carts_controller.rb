@@ -19,7 +19,7 @@ class ShoppingCartsController < ApplicationController
       amount: amount
     })
 
-      render layout: false
+    render layout: false
   end
 
   def update
@@ -36,7 +36,7 @@ class ShoppingCartsController < ApplicationController
   def destroy
     @shopping_cart.destroy if @shopping_cart
 
-    redirct_to shopping_carts_path
+    redirect_to shopping_carts_path
   end
 
   private

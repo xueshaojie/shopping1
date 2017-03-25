@@ -32,8 +32,8 @@ class AddressesController < ApplicationController
     render action: :new
   end
 
-  def udpate
-    @address.attributes = addresses_params
+  def update
+    @address.attributes = address_params
     if @address.save
       @addresses = current_user.reload.addresses
       render json: {

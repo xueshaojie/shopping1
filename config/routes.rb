@@ -13,7 +13,8 @@ Rails.application.routes.draw do
       put :set_default_address
     end
   end
-  resources :orders 
+  resources :orders
+  resources :payments, only: [:index]
 
   namespace :admin do
     root 'sessions#new'
