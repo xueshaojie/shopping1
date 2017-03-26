@@ -20,8 +20,19 @@ Rails.application.routes.draw do
       get :pay_return
       get :pay_notify
       get :success
-      get :failed 
+      get :failed
     end
+  end
+  namespace :dashboard do
+    scope 'profile' do
+      controller :profile do
+        get :password
+        put :update_password
+      end
+    end
+
+    resources :orders, only: [:index]
+    resources :addresses, only: [:index]
   end
 
   namespace :admin do
