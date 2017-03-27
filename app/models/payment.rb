@@ -11,7 +11,7 @@ class Payment < ApplicationRecord
 
   before_create :gen_payment_no
 
-  def self.create_form_orders! user, *orders
+  def self.create_from_orders! user, *orders
     orders.flatten!
 
     payment = nil

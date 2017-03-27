@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
 
-  protect_form_forgery except: [:alipay_notify]
+  protect_from_forgery except: [:alipay_notify]
 
   before_action :auth_user, except: [:pay_notify]
   before_action :auth_request, only: [:pay_return, :pay_notify]
@@ -14,7 +14,7 @@ class PaymentsController < ApplicationController
 
   def generate_pay
     orders = current_user.orders.where(order_no: params[:order_nos].split(','))
-    payment = Payment.create_form_orders!(current_user, orders)
+    payment = Payment.create_from_orders!(current_user, orders)
 
     redirect_to payments_path(payment_no: payment.payment_no)
   end
@@ -36,13 +36,12 @@ class PaymentsController < ApplicationController
   end
 
   private
-
   def is_payment_success?
     %w[TRADE_SUCCESS TRADE_FINISHED].include?(params[:trade_status])
   end
 
   def do_payment
-    unless @payment.is_success? #避免同步通知和异步通知多次调用
+    unless @payment.is_success? # 避免同步通知和异步通知多次调用
       if is_payment_success?
         @payment.do_success_payment! params
         redirect_to success_payments_path
@@ -51,7 +50,7 @@ class PaymentsController < ApplicationController
         redirect_to failed_payments_path
       end
     else
-      redirect_to success_payments_path
+     redirect_to success_payments_path
     end
   end
 
@@ -59,9 +58,10 @@ class PaymentsController < ApplicationController
     unless build_is_request_from_alipay?(params)
       Rails.logger.info "PAYMENT DEBUG NON ALIPAY REQUEST: #{params.to_hash}"
       redirect_to failed_payments_path
+      return
     end
 
-    unless build_is_request_sign_vaild?(params)
+    unless build_is_request_sign_valid?(params)
       Rails.logger.info "PAYMENT DEBUG ALIPAY SIGN INVALID: #{params.to_hash}"
       redirect_to failed_payments_path
     end
@@ -86,12 +86,12 @@ class PaymentsController < ApplicationController
     #   service: create_direct_pay_by_user | mobile.securitypay.pay
     #   sign_type: MD5 | RSA
     pay_options = {
-      "service" => "create_direct_pay_by_user",
+      "service" => 'create_direct_pay_by_user',
       "partner" => ENV['ALIPAY_PID'],
-      "seller_id" = ENV['ALIPAY_PID'],
+      "seller_id" => ENV['ALIPAY_PID'],
       "payment_type" => "1",
       "notify_url" => ENV['ALIPAY_NOTIFY_URL'],
-      'return_url' => ENV['ALIPAY_RETURN_URL'],
+      "return_url" => ENV['ALIPAY_RETURN_URL'],
 
       "anti_phishing_key" => "",
       "exter_invoke_ip" => "",
@@ -129,7 +129,7 @@ class PaymentsController < ApplicationController
     options.extract!("controller", "action", "format")
 
     if options["sign_type"] == "MD5"
-      options["sign"]  == build_generate_sign(options)
+      options["sign"] == build_generate_sign(options)
     elsif options["sign_type"] == "RSA"
       build_rsa_verify?(build_sign_data(options.dup), options['sign'])
     end
@@ -146,7 +146,6 @@ class PaymentsController < ApplicationController
   end
 
   # RSA 签名
-
   def build_rsa_sign(data)
     private_key_path = Rails.root.to_s + "/config/.alipay_self_private"
     pri = OpenSSL::PKey::RSA.new(File.read(private_key_path))
@@ -156,10 +155,9 @@ class PaymentsController < ApplicationController
   end
 
   # RSA 验证
-
   def build_rsa_verify?(data, sign)
     public_key_path = Rails.root.to_s + "/config/.alipay_public"
-    pub = OpenSSL::PKey::RSA.new(File.read(public_key_path)
+    pub = OpenSSL::PKey::RSA.new(File.read(public_key_path))
 
     digester = OpenSSL::Digest::SHA1.new
     sign = Base64.decode64(sign)

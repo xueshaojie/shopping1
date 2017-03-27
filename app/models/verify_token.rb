@@ -3,7 +3,7 @@ class VerifyToken < ApplicationRecord
   validates_presence_of :token
   validates_presence_of :cellphone
 
-  scope :avaliable, -> { where("expired_at > :time", time: Time.now) }
+  scope :available, -> { where("expired_at > :time", time: Time.now) }
 
   def self.upsert cellphone, token
     cond = { cellphone: cellphone }
@@ -14,6 +14,6 @@ class VerifyToken < ApplicationRecord
       record.update_attributes token: token, expired_at: Time.now + 10.minutes
     end
 
-    record 
+    record
   end
 end

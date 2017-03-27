@@ -1,10 +1,10 @@
 class User < ApplicationRecord
   authenticates_with_sorcery!
 
-  attr_accessor :password, :password_confirmation
+  attr_accessor :password, :password_confirmation, :token
 
   CELLPHONE_RE = /\A(\+86|86)?1\d{10}\z/
-  EMZIL_RE = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
+  EMAIL_RE = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/
 
   #validates_presence_of :email, message: "邮箱不能为空"
   #validates_format_of :email, message: "邮箱格式不合法",
@@ -62,7 +62,7 @@ class User < ApplicationRecord
           return false
         end
 
-        unless VerifyToken.avaliable.find_by(cellphone: self.cellphone, token: self.token)
+        unless VerifyToken.available.find_by(cellphone: self.cellphone, token: self.token)
           self.errors.add :cellphone, "手机验证码不正确或者已过期"
           return false
         end

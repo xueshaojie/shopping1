@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   delete '/logout' => 'sessions#destroy', as: :logout
 
   resources :categories, only: [:show]
-  resources :products, only: [:show]
+  resources :products, only: [:show] do
+    get :search, on: :collection 
+  end
   resources :shopping_carts
   resources :addresses do
     member do
@@ -24,7 +26,7 @@ Rails.application.routes.draw do
     end
   end
   resources :cellphone_tokens, only: [:create]
-  
+
   namespace :dashboard do
     scope 'profile' do
       controller :profile do

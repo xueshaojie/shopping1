@@ -4,8 +4,8 @@ module SendSMS
     MESSAGE_SUFFIX = "【商城】"
 
     SMS_API_KEY = ENV['SMS_API_KEY']
-    SMS_SEND_URL = 'https://sms-api.luosimao.com/v1/send.json'
-    SMS-STATUS_URL = "https://sms-api.luosimao.com/v1/status.json"
+    SMS_SEND_URL = "https://sms-api.luosimao.com/v1/send.json"
+    SMS_STATUS_URL = "https://sms-api.luosimao.com/v1/status.json"
 
     #
     # SendSMS.send "13718781273", "hello"
